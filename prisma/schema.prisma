@@ -1,0 +1,87 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
+
+model SpotifyCredentials {
+  id           Int      @id @default(autoincrement())
+  accessToken  String   @map("access_token") @db.Text
+  refreshToken String   @map("refresh_token") @db.Text
+  expiresAt    DateTime @default(now()) @map("expires_at")
+
+  @@map("spotify_credentials")
+}
+
+model SpotifyCursor {
+  id        Int       @id @default(autoincrement())
+  cursor    String    @db.Text
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  @@map("spotify_cursor")
+}
+
+model SpotifyArtist {
+  id     String         @id
+  name   String         @db.Text
+  albums SpotifyAlbum[]
+  tracks SpotifyTrack[]
+  uri    String         @map("uri") @db.Text
+
+  @@map("spotify_artists")
+}
+
+model SpotifyAlbum {
+  id                   String              @id
+  name                 String              @db.Text
+  artists              SpotifyArtist[]
+  images               SpotifyAlbumImage[]
+  releaseDate          DateTime            @map("release_date")
+  releaseDatePrecision String              @map("release_date_precision") @db.Text
+  totalTracks          Int                 @map("total_tracks")
+  type                 String              @db.Text
+  uri                  String              @map("uri") @db.Text
+  tracks               SpotifyTrack[]
+
+  @@map("spotify_albums")
+}
+
+model SpotifyAlbumImage {
+  id      String       @id @default(cuid())
+  height  Int?
+  width   Int?
+  url     String       @unique
+  album   SpotifyAlbum @relation(fields: [albumId], references: [id])
+  albumId String       @map("spotify_album_id") @db.Text
+
+  @@map("spotify_album_images")
+}
+
+model SpotifyTrack {
+  id         String                @id
+  name       String                @db.Text
+  artists    SpotifyArtist[]
+  durationMs Int                   @map("duration_ms")
+  explicit   Boolean
+  uri        String                @map("uri") @db.Text
+  album      SpotifyAlbum          @relation(fields: [albumId], references: [id])
+  albumId    String                @map("spotify_album_id") @db.Text
+  plays      SpotifyPlayedTracks[]
+
+  @@map("spotify_tracks")
+}
+
+model SpotifyPlayedTracks {
+  id         Int          @id @default(autoincrement())
+  playedAt   DateTime     @map("played_at")
+  track      SpotifyTrack @relation(fields: [trackId], references: [id])
+  trackId    String       @map("spotify_track_id") @db.Text
+  popularity Int
+
+  @@map("spotify_played_tracks")
+}
