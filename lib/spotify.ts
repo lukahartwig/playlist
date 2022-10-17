@@ -89,6 +89,15 @@ export async function updateRecentlyPlayedTracks() {
     );
 
     await prisma.spotifyArtist.createMany({
+      data: item.track.artists.map((artist) => ({
+        id: artist.id,
+        name: artist.name,
+        uri: artist.uri,
+      })),
+      skipDuplicates: true,
+    });
+
+    await prisma.spotifyArtist.createMany({
       data: item.track.album.artists.map((artist) => ({
         id: artist.id,
         name: artist.name,
