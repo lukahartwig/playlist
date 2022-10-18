@@ -90,17 +90,16 @@ export async function updateRecentlyPlayedTracks() {
       `Processing track ${item.track.name} by ${item.track.artists[0].name} at ${item.played_at}`
     );
 
-    await prisma.spotifyArtist.createMany({
-      data: item.track.artists.map((artist) => ({
-        id: artist.id,
-        name: artist.name,
-        uri: artist.uri,
-      })),
-      skipDuplicates: true,
-    });
+    const track = item.track;
+    const trackArtists = track.artists;
+    const album = track.album;
+    const albumArtists = album.artists;
+    const allArtists = [...trackArtists, ...albumArtists].filter(
+      (artist, i, list) => list.findIndex((a) => a.id === artist.id) === i
+    );
 
     await prisma.spotifyArtist.createMany({
-      data: item.track.album.artists.map((artist) => ({
+      data: allArtists.map((artist) => ({
         id: artist.id,
         name: artist.name,
         uri: artist.uri,
@@ -118,21 +117,24 @@ export async function updateRecentlyPlayedTracks() {
         releaseDatePrecision: item.track.album.release_date_precision,
         totalTracks: item.track.album.total_tracks,
         type: item.track.album.album_type,
-        artists: {
-          connect: item.track.album.artists.map((artist) => ({
-            id: artist.id,
-          })),
-        },
       },
       update: {
         name: item.track.album.name,
         uri: item.track.album.uri,
-        artists: {
-          connect: item.track.album.artists.map((artist) => ({
-            id: artist.id,
-          })),
-        },
+        releaseDate: new Date(item.track.album.release_date),
+        releaseDatePrecision: item.track.album.release_date_precision,
+        totalTracks: item.track.album.total_tracks,
+        type: item.track.album.album_type,
       },
+    });
+
+    await prisma.artistsOnAlbums.createMany({
+      data: albumArtists.map((artist) => ({
+        albumId: album.id,
+        artistId: artist.id,
+        position: album.artists.findIndex((a) => a.id === artist.id),
+      })),
+      skipDuplicates: true,
     });
 
     await prisma.spotifyAlbumImage.createMany({
@@ -155,22 +157,23 @@ export async function updateRecentlyPlayedTracks() {
         durationMs: item.track.duration_ms,
         explicit: item.track.explicit,
         albumId: item.track.album.id,
-        artists: {
-          connect: item.track.artists.map((artist) => ({
-            id: artist.id,
-          })),
-        },
       },
       update: {
         name: item.track.name,
         uri: item.track.uri,
+        durationMs: item.track.duration_ms,
+        explicit: item.track.explicit,
         albumId: item.track.album.id,
-        artists: {
-          connect: item.track.artists.map((artist) => ({
-            id: artist.id,
-          })),
-        },
       },
+    });
+
+    await prisma.artistsOnTracks.createMany({
+      data: albumArtists.map((artist) => ({
+        artistId: artist.id,
+        trackId: track.id,
+        position: track.artists.findIndex((a) => a.id === artist.id),
+      })),
+      skipDuplicates: true,
     });
 
     await prisma.spotifyPlayedTracks.create({
