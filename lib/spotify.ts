@@ -128,7 +128,7 @@ export async function updateRecentlyPlayedTracks() {
       },
     });
 
-    await prisma.artistsOnAlbums.createMany({
+    await prisma.spotifyArtistsOnAlbums.createMany({
       data: albumArtists.map((artist) => ({
         albumId: album.id,
         artistId: artist.id,
@@ -167,7 +167,7 @@ export async function updateRecentlyPlayedTracks() {
       },
     });
 
-    await prisma.artistsOnTracks.createMany({
+    await prisma.spotifyArtistsOnTracks.createMany({
       data: albumArtists.map((artist) => ({
         artistId: artist.id,
         trackId: track.id,
