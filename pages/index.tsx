@@ -1,3 +1,21 @@
+import useSWR, { Fetcher } from "swr";
+import { RecentlyPlayedResponse } from "./api/recently-played";
+
+const fetcher: Fetcher<RecentlyPlayedResponse, string> = (url) =>
+  fetch(url).then((res) => res.json());
+
 export default function HomePage() {
-  return <h1>Hello World (Test)</h1>;
+  const { data } = useSWR("/api/recently-played", fetcher);
+  return (
+    <>
+      <h1>Recently played</h1>
+      <ul>
+        {data?.tracks.map((track) => (
+          <li key={track.id}>
+            {track.played_at}: {track.artist} - {track.title}
+          </li>
+        ))}
+      </ul>
+    </>
+  );
 }

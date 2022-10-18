@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@planetscale/database': ^1.4.0
   '@prisma/client': ^4.5.0
   '@types/node': ^18.11.0
   '@types/react': ^18.0.21
@@ -16,9 +17,11 @@ specifiers:
   react: ^18.2.0
   react-dom: ^18.2.0
   spotify-web-api-node: ^5.0.2
+  swr: ^1.3.0
   typescript: ^4.8.4
 
 dependencies:
+  '@planetscale/database': 1.4.0
   '@prisma/client': 4.5.0_prisma@4.5.0
   '@upstash/qstash': 0.1.7
   envalid: 7.3.1
@@ -26,6 +29,7 @@ dependencies:
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   spotify-web-api-node: 5.0.2
+  swr: 1.3.0_react@18.2.0
 
 devDependencies:
   '@types/node': 18.11.0
@@ -243,6 +247,11 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.13.0
     dev: true
+
+  /@planetscale/database/1.4.0:
+    resolution: {integrity: sha512-lva57Z/Nz57ocB3dwaWPDGMbb+dj5HtooVB9c0DPcAF9SHbQyfovDyGK5bDgcmCMVoonfblcYv7fr+WBLc3xNw==}
+    engines: {node: '>=16'}
+    dev: false
 
   /@prisma/client/4.5.0_prisma@4.5.0:
     resolution: {integrity: sha512-B2cV0OPI1smhdYUxsJoLYQLoMlLH06MUxgFUWQnHodGMX98VRVXKmQE/9OcrTNkqtke5RC+YU24Szxd04tZA2g==}
@@ -1953,6 +1962,14 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
     dev: true
+
+  /swr/1.3.0_react@18.2.0:
+    resolution: {integrity: sha512-dkghQrOl2ORX9HYrMDtPa7LTVHJjCTeZoB1dqTbnnEDlSvN8JEKpYIYurDfvbQFUUS8Cg8PceFVZNkW0KNNYPw==}
+    peerDependencies:
+      react: ^16.11.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
+    dev: false
 
   /text-table/0.2.0:
     resolution: {integrity: sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==}
