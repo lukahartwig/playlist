@@ -70,7 +70,9 @@ export async function updateRecentlyPlayedTracks() {
   const [cursor] = await Promise.all([getSpotifyCursor(), refreshClient()]);
 
   console.log(
-    `Fetching recently played tracks from Spotify, after ${cursor?.cursor}`
+    `Fetching recently played tracks from Spotify, after ${new Date(
+      Number(cursor?.cursor)
+    )}`
   );
 
   const { body } = await client.getMyRecentlyPlayedTracks({
@@ -182,8 +184,8 @@ export async function updateRecentlyPlayedTracks() {
     });
   }
 
-  const nextCursor = body.cursors?.after ?? Date.now();
-  console.log(`Next cursor: ${new Date(Number(nextCursor))}`);
+  const nextCursor = Number(body.cursors?.after) + 1 ?? Date.now();
+  console.log(`Next cursor: ${new Date(nextCursor)}`);
 
   await prisma.spotifyCursor.update({
     where: { id: cursor?.id },
