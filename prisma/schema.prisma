@@ -27,26 +27,26 @@ model SpotifyCursor {
 }
 
 model SpotifyArtist {
-  id     String            @id
-  name   String            @db.Text
-  uri    String            @map("uri") @db.Text
-  tracks ArtistsOnTracks[]
-  albums ArtistsOnAlbums[]
+  id     String                   @id
+  name   String                   @db.Text
+  uri    String                   @map("uri") @db.Text
+  tracks SpotifyArtistsOnTracks[]
+  albums SpotifyArtistsOnAlbums[]
 
   @@map("spotify_artists")
 }
 
 model SpotifyAlbum {
-  id                   String              @id
-  name                 String              @db.Text
-  releaseDate          DateTime            @map("release_date")
-  releaseDatePrecision String              @map("release_date_precision") @db.Text
-  totalTracks          Int                 @map("total_tracks")
-  type                 String              @db.Text
-  uri                  String              @map("uri") @db.Text
+  id                   String                   @id
+  name                 String                   @db.Text
+  releaseDate          DateTime                 @map("release_date")
+  releaseDatePrecision String                   @map("release_date_precision") @db.Text
+  totalTracks          Int                      @map("total_tracks")
+  type                 String                   @db.Text
+  uri                  String                   @map("uri") @db.Text
   images               SpotifyAlbumImage[]
   tracks               SpotifyTrack[]
-  artists              ArtistsOnAlbums[]
+  artists              SpotifyArtistsOnAlbums[]
 
   @@map("spotify_albums")
 }
@@ -63,20 +63,20 @@ model SpotifyAlbumImage {
 }
 
 model SpotifyTrack {
-  id         String                @id
-  name       String                @db.Text
-  durationMs Int                   @map("duration_ms")
+  id         String                   @id
+  name       String                   @db.Text
+  durationMs Int                      @map("duration_ms")
   explicit   Boolean
-  uri        String                @map("uri") @db.Text
-  album      SpotifyAlbum          @relation(fields: [albumId], references: [id])
-  albumId    String                @map("spotify_album_id") @db.Text
+  uri        String                   @map("uri") @db.Text
+  album      SpotifyAlbum             @relation(fields: [albumId], references: [id])
+  albumId    String                   @map("spotify_album_id") @db.Text
   plays      SpotifyPlayedTracks[]
-  artists    ArtistsOnTracks[]
+  artists    SpotifyArtistsOnTracks[]
 
   @@map("spotify_tracks")
 }
 
-model ArtistsOnTracks {
+model SpotifyArtistsOnTracks {
   artist   SpotifyArtist @relation(fields: [artistId], references: [id])
   artistId String        @map("spotify_artist_id")
   track    SpotifyTrack  @relation(fields: [trackId], references: [id])
@@ -84,10 +84,10 @@ model ArtistsOnTracks {
   position Int
 
   @@id([artistId, trackId])
-  @@map("artist_tracks")
+  @@map("spotify_artist_tracks")
 }
 
-model ArtistsOnAlbums {
+model SpotifyArtistsOnAlbums {
   artist   SpotifyArtist @relation(fields: [artistId], references: [id])
   artistId String        @map("spotify_artist_id")
   album    SpotifyAlbum  @relation(fields: [albumId], references: [id])
@@ -95,7 +95,7 @@ model ArtistsOnAlbums {
   position Int
 
   @@id([artistId, albumId])
-  @@map("artist_albums")
+  @@map("spotify_artist_albums")
 }
 
 model SpotifyPlayedTracks {
