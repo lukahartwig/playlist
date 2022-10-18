@@ -17,7 +17,7 @@ specifiers:
   react: ^18.2.0
   react-dom: ^18.2.0
   spotify-web-api-node: ^5.0.2
-  swr: ^1.3.0
+  swr: 2.0.0-rc.0
   typescript: ^4.8.4
 
 dependencies:
@@ -29,7 +29,7 @@ dependencies:
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   spotify-web-api-node: 5.0.2
-  swr: 1.3.0_react@18.2.0
+  swr: 2.0.0-rc.0_react@18.2.0
 
 devDependencies:
   '@types/node': 18.11.0
@@ -1963,12 +1963,14 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  /swr/1.3.0_react@18.2.0:
-    resolution: {integrity: sha512-dkghQrOl2ORX9HYrMDtPa7LTVHJjCTeZoB1dqTbnnEDlSvN8JEKpYIYurDfvbQFUUS8Cg8PceFVZNkW0KNNYPw==}
+  /swr/2.0.0-rc.0_react@18.2.0:
+    resolution: {integrity: sha512-QOp+4Cqnb/uuLKeuRDh7aT+ws6wSWWKPqfyIpBXK8DM3IugOYeLO5v+390I0p1MIfRd0CQlAIJZBEgmHaTfDuA==}
+    engines: {pnpm: '7'}
     peerDependencies:
       react: ^16.11.0 || ^17.0.0 || ^18.0.0
     dependencies:
       react: 18.2.0
+      use-sync-external-store: 1.2.0_react@18.2.0
     dev: false
 
   /text-table/0.2.0:
