@@ -52,17 +52,11 @@ export default async function handler(req: NextRequest) {
     })),
   };
 
-  const now = new Date();
-  const minutes = now.getMinutes();
-  const seconds = now.getSeconds();
-  const age = (minutes % 5) * 60 + seconds;
-
   return new Response(JSON.stringify(body), {
     status: 200,
     headers: {
       "content-type": "application/json",
-      "cache-control": "public, s-maxage=310",
-      age: age.toString(),
+      "cache-control": "s-maxage=1, stale-while-revalidate",
     },
   });
 }
