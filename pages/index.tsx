@@ -1,6 +1,7 @@
+import Head from "next/head";
 import Image from "next/future/image";
 import useSWR, { preload, Fetcher } from "swr";
-import { formatDistanceToNow, formatDistanceToNowStrict } from "date-fns";
+import { formatDistanceToNowStrict } from "date-fns";
 import { RecentlyPlayedResponse } from "./api/recently-played";
 
 const fetcher: Fetcher<RecentlyPlayedResponse, string> = (url) =>
@@ -12,6 +13,13 @@ export default function HomePage() {
   const { data } = useSWR("/api/recently-played", fetcher);
   return (
     <>
+      <Head>
+        <title>Playlist | Overview</title>
+        <meta
+          name="description"
+          content="Follow my recently played music on Spotify."
+        />
+      </Head>
       <div className="container mx-auto">
         <ul role="list" className="divide-y divide-gray-200">
           {data?.tracks.map((track) => (
