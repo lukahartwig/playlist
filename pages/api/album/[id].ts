@@ -16,7 +16,7 @@ export interface Album {
 
 export default async function handler(req: NextRequest) {
   const id = req.url.split("/").pop();
-  const artist = await queryOne<Album>(
+  const album = await queryOne<Album>(
     `
     SELECT id, name, release_date, release_date_precision, total_tracks, type
     FROM spotify_albums sa
@@ -25,7 +25,7 @@ export default async function handler(req: NextRequest) {
     [id]
   );
 
-  return new Response(JSON.stringify(artist), {
+  return new Response(JSON.stringify(album), {
     status: 200,
     headers: {
       "content-type": "application/json",
