@@ -7,6 +7,8 @@
     "start": "next start"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.3",
+    "@heroicons/react": "^2.0.12",
     "@planetscale/database": "^1.4.0",
     "@prisma/client": "^4.5.0",
     "@upstash/qstash": "^0.1.7",
