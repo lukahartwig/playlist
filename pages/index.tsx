@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Image from "next/future/image";
+import Link from "next/link";
 import useSWR, { preload, Fetcher } from "swr";
 import { formatDistanceToNowStrict } from "date-fns";
 import { RecentlyPlayedResponse } from "./api/recently-played";
@@ -39,7 +40,13 @@ export default function HomePage() {
                   <div className="flex-1 space-y-1">
                     <div className="flex items-center justify-between">
                       <h3 className="text-sm">
-                        <b>{track.title}</b> by&nbsp;{track.artist}
+                        <b>{track.title}</b>{" "}
+                        <span className="whitespace-nowrap">
+                          by{" "}
+                          <Link href={`/artist/${track.artist_id}`}>
+                            {track.artist}
+                          </Link>
+                        </span>
                       </h3>
                       <p className="text-sm text-gray-500">
                         {formatDistanceToNowStrict(
