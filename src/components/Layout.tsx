@@ -4,7 +4,10 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-const navigation = [{ name: "Dashboard", href: "/" }];
+const navigation = [
+  { name: "Dashboard", href: "/" },
+  { name: "Artists", href: "/artists/top" },
+];
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -34,13 +37,13 @@ export function Layout({ children }: Props) {
                           key={item.name}
                           href={item.href}
                           className={classNames(
-                            item.href === router.asPath
+                            item.href === router.pathname
                               ? "border-indigo-500 text-gray-900"
                               : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700",
                             "inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium"
                           )}
                           aria-current={
-                            item.href === router.asPath ? "page" : undefined
+                            item.href === router.pathname ? "page" : undefined
                           }
                         >
                           {item.name}
@@ -75,13 +78,13 @@ export function Layout({ children }: Props) {
                       as={Link}
                       href={item.href}
                       className={classNames(
-                        item.href === router.asPath
+                        item.href === router.pathname
                           ? "border-indigo-500 bg-indigo-50 text-indigo-700"
                           : "border-transparent text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800",
                         "block border-l-4 py-2 pl-3 pr-4 text-base font-medium"
                       )}
                       aria-current={
-                        item.href === router.asPath ? "page" : undefined
+                        item.href === router.pathname ? "page" : undefined
                       }
                     >
                       {item.name}

@@ -6,7 +6,7 @@ const client = new Client({
 
 export async function queryRows<Row>(
   query: string,
-  params?: any[]
+  params?: object | any[]
 ): Promise<Row[]> {
   const result = await client.execute(query, params, { as: "object" });
   return result.rows as Row[];
