@@ -1,5 +1,5 @@
 {
-  "packageManager": "pnpm@7.13.5",
+  "packageManager": "pnpm@7.13.6",
   "scripts": {
     "build": "next build",
     "dev": "next dev",
@@ -11,6 +11,11 @@
     "@heroicons/react": "^2.0.12",
     "@planetscale/database": "^1.4.0",
     "@prisma/client": "^4.5.0",
+    "@tanstack/react-query": "^4.12.0",
+    "@trpc/client": "10.0.0-proxy-beta.25",
+    "@trpc/next": "10.0.0-proxy-beta.25",
+    "@trpc/react-query": "10.0.0-proxy-beta.25",
+    "@trpc/server": "10.0.0-proxy-beta.25",
     "@upstash/qstash": "^0.1.7",
     "date-fns": "^2.29.3",
     "envalid": "^7.3.1",
@@ -18,7 +23,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "spotify-web-api-node": "^5.0.2",
-    "swr": "2.0.0-rc.0"
+    "superjson": "^1.11.0",
+    "zod": "^3.19.1"
   },
   "devDependencies": {
     "@types/node": "^18.11.0",

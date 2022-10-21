@@ -1,9 +1,5 @@
-import { NextRequest } from "next/server";
-import { queryRows } from "../../lib/db";
-
-export const config = {
-  runtime: "experimental-edge",
-};
+import { queryRows } from "@/lib/db";
+import { router, publicProcedure } from "@/server/trpc";
 
 interface Track {
   id: string;
@@ -22,8 +18,9 @@ export interface RecentlyPlayedResponse {
   tracks: Track[];
 }
 
-export default async function handler(req: NextRequest) {
-  const tracks = await queryRows<Track>(`
+export const trackRouter = router({
+  recentlyPlayed: publicProcedure.query(async () => {
+    const tracks = await queryRows<Track>(`
     SELECT spt.id     AS id,
            st.name    AS title,
            played_at,
@@ -45,18 +42,11 @@ export default async function handler(req: NextRequest) {
     LIMIT 10
   `);
 
-  const body: RecentlyPlayedResponse = {
-    tracks: tracks.map((track) => ({
-      ...track,
-      played_at: new Date(track.played_at).toISOString(),
-    })),
-  };
-
-  return new Response(JSON.stringify(body), {
-    status: 200,
-    headers: {
-      "content-type": "application/json",
-      "cache-control": "s-maxage=1, stale-while-revalidate",
-    },
-  });
-}
+    return {
+      tracks: tracks.map((track) => ({
+        ...track,
+        played_at: new Date(track.played_at).toISOString(),
+      })),
+    };
+  }),
+});
