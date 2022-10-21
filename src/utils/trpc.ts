@@ -37,9 +37,38 @@ export const trpc = createTRPCNext<AppRouter, SSRContext>({
         }),
         httpBatchLink({
           url: `${getBaseUrl()}/api/trpc`,
+          headers() {
+            if (ctx?.req) {
+              const { connection: _connection, ...headers } = ctx.req.headers;
+              return {
+                ...headers,
+                "x-ssr": "1",
+              };
+            }
+            return {};
+          },
         }),
       ],
     };
+  },
+  ssr: true,
+  responseMeta(opts) {
+    const ctx = opts.ctx as SSRContext;
+
+    if (ctx.status) {
+      return {
+        status: ctx.status,
+      };
+    }
+
+    const error = opts.clientErrors[0];
+    if (error) {
+      return {
+        status: error.data?.httpStatus ?? 500,
+      };
+    }
+
+    return {};
   },
 });
 
