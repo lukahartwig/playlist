@@ -4,8 +4,8 @@ import Link from "next/link";
 interface Props {
   page: number;
   size?: number;
-  nextHref?: string;
-  prevHref?: string;
+  nextHref: string;
+  prevHref: string;
 }
 
 export function MostPlayedArtists({
@@ -26,6 +26,7 @@ export function MostPlayedArtists({
   }
 
   const total = query.data.total;
+  const totalPages = Math.ceil(total / size);
   const start = (page - 1) * size + 1;
   const end = Math.min(start + size - 1, total);
 
@@ -73,7 +74,7 @@ export function MostPlayedArtists({
           </p>
         </div>
         <div className="flex flex-1 justify-between sm:justify-end">
-          {prevHref && (
+          {page !== 1 && (
             <Link
               className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
               href={prevHref}
@@ -81,7 +82,7 @@ export function MostPlayedArtists({
               Previous
             </Link>
           )}
-          {nextHref && (
+          {page !== totalPages && (
             <Link
               className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
               href={nextHref}
