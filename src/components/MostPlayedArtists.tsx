@@ -25,6 +25,10 @@ export function MostPlayedArtists({
     return null;
   }
 
+  const total = query.data.total;
+  const start = (page - 1) * size + 1;
+  const end = Math.min(start + size - 1, total);
+
   return (
     <div>
       <table className="min-w-full divide-y divide-gray-300">
@@ -63,14 +67,9 @@ export function MostPlayedArtists({
       >
         <div className="hidden sm:block">
           <p className="text-sm text-gray-700">
-            Showing <span className="font-medium">{(page - 1) * size + 1}</span>{" "}
-            to{" "}
-            <span className="font-medium">
-              {page * size >= query.data?.total
-                ? page * size
-                : query.data?.total}
-            </span>{" "}
-            of <span className="font-medium">{query.data?.total}</span> results
+            Showing <span className="font-medium">{start}</span> to{" "}
+            <span className="font-medium">{end}</span> of{" "}
+            <span className="font-medium">{total}</span> results
           </p>
         </div>
         <div className="flex flex-1 justify-between sm:justify-end">
