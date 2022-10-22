@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 const navigation = [
   { name: "Dashboard", href: "/" },
   { name: "Artists", href: "/artists/top" },
+  { name: "Albums", href: "/albums/top" },
 ];
 
 function classNames(...classes: string[]) {
