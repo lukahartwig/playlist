@@ -10,9 +10,9 @@ export function Playtime({ durationMs }: Props) {
     end: durationMs,
   });
 
-  const fomratted = formatDuration(duration, {
+  const formatted = formatDuration(duration, {
     format: ["years", "months", "weeks", "days", "hours", "minutes"],
   });
 
-  return <>{fomratted || "<1 minute"}</>;
+  return <>{formatted || "<1 minute"}</>;
 }
