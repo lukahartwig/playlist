@@ -57,22 +57,24 @@ model SpotifyAlbumImage {
   width   Int?
   url     String       @unique
   album   SpotifyAlbum @relation(fields: [albumId], references: [id])
-  albumId String       @map("spotify_album_id") @db.Text
+  albumId String       @map("spotify_album_id")
 
+  @@index([albumId])
   @@map("spotify_album_images")
 }
 
 model SpotifyTrack {
-  id         String                   @id
-  name       String                   @db.Text
-  durationMs Int                      @map("duration_ms")
-  explicit   Boolean
-  uri        String                   @map("uri") @db.Text
-  album      SpotifyAlbum             @relation(fields: [albumId], references: [id])
-  albumId    String                   @map("spotify_album_id") @db.Text
-  plays      SpotifyPlayedTracks[]
-  artists    SpotifyArtistsOnTracks[]
+  id                  String                   @id
+  name                String                   @db.Text
+  durationMs          Int                      @map("duration_ms")
+  explicit            Boolean
+  uri                 String                   @map("uri") @db.Text
+  album               SpotifyAlbum             @relation(fields: [albumId], references: [id])
+  albumId             String                   @map("spotify_album_id")
+  artists             SpotifyArtistsOnTracks[]
+  SpotifyPlayedTracks SpotifyPlayedTracks[]
 
+  @@index([albumId])
   @@map("spotify_tracks")
 }
 
@@ -84,6 +86,8 @@ model SpotifyArtistsOnTracks {
   position Int
 
   @@id([artistId, trackId])
+  @@index([artistId])
+  @@index([trackId])
   @@map("spotify_artist_tracks")
 }
 
@@ -95,6 +99,8 @@ model SpotifyArtistsOnAlbums {
   position Int
 
   @@id([artistId, albumId])
+  @@index([artistId])
+  @@index([albumId])
   @@map("spotify_artist_albums")
 }
 
@@ -102,8 +108,10 @@ model SpotifyPlayedTracks {
   id         Int          @id @default(autoincrement())
   playedAt   DateTime     @map("played_at")
   track      SpotifyTrack @relation(fields: [trackId], references: [id])
-  trackId    String       @map("spotify_track_id") @db.Text
+  trackId    String       @map("spotify_track_id")
   popularity Int
 
+  @@index([playedAt])
+  @@index([trackId])
   @@map("spotify_played_tracks")
 }
