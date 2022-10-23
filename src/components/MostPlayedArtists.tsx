@@ -117,10 +117,10 @@ export function MostPlayedArtists({
           {Array.from({ length: 10 }, (_, i) => (
             <tr className="animate-pulse" key={i}>
               <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                <div className="h-3 w-80 rounded bg-gray-200" />
+                <div className="h-3.5 w-80 rounded bg-gray-200" />
               </td>
               <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                <div className="h-3 w-12 rounded bg-gray-200" />
+                <div className="h-3.5 w-12 rounded bg-gray-200" />
               </td>
             </tr>
           ))}
