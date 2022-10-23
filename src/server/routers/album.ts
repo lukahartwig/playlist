@@ -42,18 +42,18 @@ export const albumRouter = router({
           album_cover_url: string;
           album_cover_height: number;
           album_cover_width: number;
-          playcount: number;
+          total_playtime_ms: string;
         }>(
           `
             SELECT
-              sa.id         AS id,
-              sa.name       AS title,
-              s.name        AS artist,
-              s.id          AS artist_id,
-              sai.url       AS album_cover_url,
-              sai.height    AS album_cover_height,
-              sai.width     AS album_cover_width,
-              count(spt.id) AS playcount
+              sa.id               AS id,
+              sa.name             AS title,
+              s.name              AS artist,
+              s.id                AS artist_id,
+              sai.url             AS album_cover_url,
+              sai.height          AS album_cover_height,
+              sai.width           AS album_cover_width,
+              sum(st.duration_ms) AS total_playtime_ms
             FROM spotify_albums sa
               LEFT JOIN spotify_tracks st on sa.id = st.spotify_album_id
               LEFT JOIN spotify_played_tracks spt on st.id = spt.spotify_track_id
@@ -62,7 +62,7 @@ export const albumRouter = router({
               LEFT JOIN spotify_artists s on saa.spotify_artist_id = s.id
             WHERE saa.position = 0 AND sai.height = 64
             GROUP BY sa.id, sai.url, s.name, s.id
-            ORDER BY playcount DESC
+            ORDER BY total_playtime_ms DESC
             LIMIT :limit OFFSET :offset
           `,
           {
@@ -73,7 +73,10 @@ export const albumRouter = router({
       ]);
 
       return {
-        items: albums.slice(0, input.size),
+        items: albums.slice(0, input.size).map((album) => ({
+          ...album,
+          total_playtime_ms: parseInt(album.total_playtime_ms),
+        })),
         page: input.page,
         size: input.size,
         total: albumCount.count,

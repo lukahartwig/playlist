@@ -1,5 +1,6 @@
 import { trpc } from "@/utils/trpc";
 import Link from "next/link";
+import { Playtime } from "./Playtime";
 
 interface Props {
   page: number;
@@ -45,7 +46,7 @@ export function MostPlayedArtists({
               scope="col"
               className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
             >
-              Plays
+              Playtime
             </th>
           </tr>
         </thead>
@@ -56,7 +57,7 @@ export function MostPlayedArtists({
                 {artist.name}
               </td>
               <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                {artist.playcount}
+                <Playtime durationMs={artist.total_playtime_ms} />
               </td>
             </tr>
           ))}

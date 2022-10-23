@@ -1,6 +1,7 @@
 import Image from "next/future/image";
 import Link from "next/link";
 import { trpc } from "@/utils/trpc";
+import { Playtime } from "./Playtime";
 
 interface Props {
   page: number;
@@ -46,12 +47,12 @@ export function MostPlayedAlbums({
               scope="col"
               className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
             >
-              Plays
+              Playtime
             </th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200 bg-white">
-          {query.data?.items.map((album) => (
+          {query.data.items.map((album) => (
             <tr key={album.id}>
               <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                 <div className="flex items-center">
@@ -77,7 +78,7 @@ export function MostPlayedAlbums({
                 </div>
               </td>
               <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                {album.playcount}
+                <Playtime durationMs={album.total_playtime_ms} />
               </td>
             </tr>
           ))}

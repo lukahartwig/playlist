@@ -34,14 +34,19 @@ export const artistRouter = router({
         queryOne<{ count: number }>(
           `SELECT count(*) AS count FROM spotify_artists`
         ),
-        queryRows<Artist>(
+        queryRows<{
+          id: string;
+          name: string;
+          total_playtime_ms: string;
+        }>(
           `
-            SELECT sa.id, sa.name, count(spt.id) AS playcount
+            SELECT sa.id, sa.name, sum(st.duration_ms) AS total_playtime_ms
             FROM spotify_artists sa
               LEFT JOIN spotify_artist_tracks sat on sa.id = sat.spotify_artist_id
               LEFT JOIN spotify_played_tracks spt on sat.spotify_track_id = spt.spotify_track_id
+              LEFT JOIN spotify_tracks st on spt.spotify_track_id = st.id
             GROUP BY sa.id
-            ORDER BY playcount DESC
+            ORDER BY total_playtime_ms DESC
             LIMIT :limit OFFSET :offset
           `,
           {
@@ -52,7 +57,10 @@ export const artistRouter = router({
       ]);
 
       return {
-        items: artists.slice(0, input.size),
+        items: artists.slice(0, input.size).map((artist) => ({
+          ...artist,
+          total_playtime_ms: parseInt(artist.total_playtime_ms),
+        })),
         page: input.page,
         size: input.size,
         total: artistCount.count,
