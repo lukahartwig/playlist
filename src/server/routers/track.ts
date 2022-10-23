@@ -21,22 +21,23 @@ export interface RecentlyPlayedResponse {
 export const trackRouter = router({
   recentlyPlayed: publicProcedure.query(async () => {
     const tracks = await queryRows<Track>(`
-    SELECT spt.id     AS id,
-           st.name    AS title,
-           played_at,
-           sa.name    AS artist,
-           sa.id      AS artist_id,
-           s.name     AS album,
-           s.id       AS album_id,
-           sai.url    AS album_cover_url,
-           sai.height AS album_cover_height,
-           sai.width  AS album_cover_width
+    SELECT
+      spt.id     AS id,
+      st.name    AS title,
+      played_at,
+      sa.name    AS artist,
+      sa.id      AS artist_id,
+      s.name     AS album,
+      s.id       AS album_id,
+      sai.url    AS album_cover_url,
+      sai.height AS album_cover_height,
+      sai.width  AS album_cover_width
     FROM spotify_played_tracks spt
-             LEFT JOIN spotify_tracks st on st.id = spt.spotify_track_id
-             LEFT JOIN spotify_artist_tracks a on st.id = a.spotify_track_id
-             LEFT JOIN spotify_artists sa on a.spotify_artist_id = sa.id
-             LEFT JOIN spotify_albums s on st.spotify_album_id = s.id
-             LEFT JOIN spotify_album_images sai on st.spotify_album_id = sai.spotify_album_id
+      LEFT JOIN spotify_tracks st on st.id = spt.spotify_track_id
+      LEFT JOIN spotify_artist_tracks a on st.id = a.spotify_track_id
+      LEFT JOIN spotify_artists sa on a.spotify_artist_id = sa.id
+      LEFT JOIN spotify_albums s on st.spotify_album_id = s.id
+      LEFT JOIN spotify_album_images sai on st.spotify_album_id = sai.spotify_album_id
     WHERE
       DATE(played_at) > (NOW() - INTERVAL 7 DAY)
       AND a.position = 0
