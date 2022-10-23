@@ -14,5 +14,5 @@ export function Playtime({ durationMs }: Props) {
     format: ["years", "months", "weeks", "days", "hours", "minutes"],
   });
 
-  return <>{fomratted}</>;
+  return <>{fomratted || "<1 minute"}</>;
 }
