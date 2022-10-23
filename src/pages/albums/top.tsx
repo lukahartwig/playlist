@@ -9,7 +9,7 @@ export default function TopArtistsPage() {
   return (
     <>
       <Head>
-        <title>Playlist | Top Artists</title>
+        <title>Playlist | Top Albums</title>
         <meta
           name="description"
           content="My top albums on Spotify based on playtime."
