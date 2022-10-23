@@ -37,7 +37,10 @@ export const trackRouter = router({
              LEFT JOIN spotify_artists sa on a.spotify_artist_id = sa.id
              LEFT JOIN spotify_albums s on st.spotify_album_id = s.id
              LEFT JOIN spotify_album_images sai on st.spotify_album_id = sai.spotify_album_id
-    WHERE a.position = 0 AND sai.height = 64
+    WHERE
+      DATE(played_at) > (NOW() - INTERVAL 7 DAY)
+      AND a.position = 0
+      AND sai.height = 64
     ORDER BY played_at DESC
     LIMIT 10
   `);
