@@ -13,7 +13,7 @@ export function ArtistAlbumGrid({ artistId }: Props) {
   if (query.data) {
     return (
       <div className="mx-auto max-w-7xl overflow-hidden py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-[repeat(3,_300px)] lg:grid-cols-[repeat(3,_300px)] lg:gap-x-8">
+        <div className="grid grid-cols-[minmax(min-content,_300px)] gap-y-10 gap-x-6 sm:grid-cols-[repeat(2,_minmax(min-content,_300px))] lg:grid-cols-[repeat(3,_minmax(min-content,_300px))] lg:gap-x-8">
           {query.data.map((album) => (
             <Link
               key={album.id}
@@ -42,7 +42,7 @@ export function ArtistAlbumGrid({ artistId }: Props) {
 
   return (
     <div className="mx-auto max-w-7xl overflow-hidden px-4 sm:px-6 lg:px-8">
-      <div className="grid animate-pulse grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-[repeat(3,_300px)] lg:grid-cols-[repeat(3,_300px)] lg:gap-x-8">
+      <div className="grid animate-pulse grid-cols-[minmax(min-content,_300px)] gap-y-10 gap-x-6 sm:grid-cols-[repeat(2,_minmax(min-content,_300px))] lg:grid-cols-[repeat(3,_minmax(min-content,_300px))] lg:gap-x-8">
         {Array.from({ length: 9 }, (_, i) => (
           <div key={i} className="group text-sm">
             <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-100 group-hover:opacity-75">
