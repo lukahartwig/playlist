@@ -1,34 +1,59 @@
+import Head from "next/head";
 import Link from "next/link";
-import { trpc } from "@/utils/trpc";
-import { Playtime } from "./Playtime";
+import { queryOne, queryRows } from "@/lib/db";
+import { Playtime } from "@/components/Playtime";
 
-interface Props {
-  page: number;
-  size?: number;
-  nextHref: string;
-  prevHref: string;
-}
+const size = 10;
 
-export function MostPlayedArtists({
-  page,
-  size = 10,
-  nextHref,
-  prevHref,
-}: Props) {
-  const query = trpc.artist.mostPlayed.useQuery(
-    { page, size },
-    {
-      keepPreviousData: true,
-    }
-  );
+export default async function TopArtistsPage({
+  searchParams,
+}: {
+  searchParams: any;
+}) {
+  const page = searchParams?.page ? parseInt(searchParams.page) : 1;
 
-  if (query.data) {
-    const total = query.data.total;
-    const totalPages = Math.ceil(total / size);
-    const start = (page - 1) * size + 1;
-    const end = Math.min(start + size - 1, total);
+  const [artistCount, artists] = await Promise.all([
+    queryOne<{ count: number }>(
+      `SELECT count(*) AS count FROM spotify_artists`
+    ),
+    queryRows<{
+      id: string;
+      name: string;
+      total_playtime_ms: string;
+    }>(
+      `
+            SELECT sa.id, sa.name, sum(st.duration_ms) AS total_playtime_ms
+            FROM spotify_artists sa
+              LEFT JOIN spotify_artist_tracks sat on sa.id = sat.spotify_artist_id
+              LEFT JOIN spotify_played_tracks spt on sat.spotify_track_id = spt.spotify_track_id
+              LEFT JOIN spotify_tracks st on spt.spotify_track_id = st.id
+            GROUP BY sa.id
+            ORDER BY total_playtime_ms DESC
+            LIMIT :limit OFFSET :offset
+          `,
+      {
+        limit: size,
+        offset: (page - 1) * size,
+      }
+    ),
+  ]);
 
-    return (
+  const nextHref = `/artists/top?page=${page + 1}`;
+  const prevHref = `/artists/top?page=${page > 1 ? page - 1 : 1}`;
+  const total = artistCount.count;
+  const totalPages = Math.ceil(total / size);
+  const start = (page - 1) * size + 1;
+  const end = Math.min(start + size - 1, total);
+
+  return (
+    <>
+      <Head>
+        <title>Playlist | Top Artists</title>
+        <meta
+          name="description"
+          content="My top artists on Spotify based on playtime."
+        />
+      </Head>
       <div>
         <table className="min-w-full divide-y divide-gray-300">
           <thead className="bg-gray-50">
@@ -48,13 +73,13 @@ export function MostPlayedArtists({
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 bg-white">
-            {query.data.items.map((artist) => (
+            {artists.map((artist) => (
               <tr key={artist.id}>
                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                   <Link href={`/artist/${artist.id}`}>{artist.name}</Link>
                 </td>
                 <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                  <Playtime durationMs={artist.total_playtime_ms} />
+                  <Playtime durationMs={Number(artist.total_playtime_ms)} />
                 </td>
               </tr>
             ))}
@@ -91,41 +116,6 @@ export function MostPlayedArtists({
           </div>
         </nav>
       </div>
-    );
-  }
-
-  return (
-    <div>
-      <table className="min-w-full divide-y divide-gray-300">
-        <thead className="bg-gray-50">
-          <tr>
-            <th
-              scope="col"
-              className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-            >
-              Artist
-            </th>
-            <th
-              scope="col"
-              className="w-60 px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-            >
-              Playtime
-            </th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-200 bg-white">
-          {Array.from({ length: 10 }, (_, i) => (
-            <tr className="animate-pulse" key={i}>
-              <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                <div className="h-3.5 w-80 rounded bg-gray-200" />
-              </td>
-              <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                <div className="h-3.5 w-12 rounded bg-gray-200" />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    </>
   );
 }

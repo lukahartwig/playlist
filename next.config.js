@@ -5,7 +5,8 @@
  **/
 const nextConfig = {
   experimental: {
-    newNextLinkBehavior: true,
+    appDir: true,
+    // runtime: "experimental-edge",
   },
   images: {
     domains: ["i.scdn.co"],

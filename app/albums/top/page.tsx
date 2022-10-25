@@ -1,35 +1,74 @@
-import Image from "next/future/image";
+import Head from "next/head";
+import Image from "next/image";
 import Link from "next/link";
-import { trpc } from "@/utils/trpc";
-import { Playtime } from "./Playtime";
+import { queryOne, queryRows } from "@/lib/db";
+import { Playtime } from "@/components/Playtime";
 
-interface Props {
-  page: number;
-  size?: number;
-  nextHref: string;
-  prevHref: string;
-}
+const size = 10;
 
-export function MostPlayedAlbums({
-  page,
-  size = 10,
-  nextHref,
-  prevHref,
-}: Props) {
-  const query = trpc.album.mostPlayed.useQuery(
-    { page, size },
-    {
-      keepPreviousData: true,
-    }
-  );
+export default async function TopArtistsPage({
+  searchParams,
+}: {
+  searchParams: any;
+}) {
+  const page = searchParams?.page ? parseInt(searchParams.page) : 1;
+  const [albumCount, albums] = await Promise.all([
+    queryOne<{ count: number }>(`SELECT count(*) AS count FROM spotify_albums`),
+    queryRows<{
+      id: string;
+      title: string;
+      artist: string;
+      artist_id: string;
+      album_cover_url: string;
+      album_cover_height: number;
+      album_cover_width: number;
+      total_playtime_ms: string;
+    }>(
+      `
+            SELECT
+              sa.id               AS id,
+              sa.name             AS title,
+              s.name              AS artist,
+              s.id                AS artist_id,
+              sai.url             AS album_cover_url,
+              sai.height          AS album_cover_height,
+              sai.width           AS album_cover_width,
+              sum(st.duration_ms) AS total_playtime_ms
+            FROM spotify_albums sa
+              LEFT JOIN spotify_tracks st on sa.id = st.spotify_album_id
+              LEFT JOIN spotify_played_tracks spt on st.id = spt.spotify_track_id
+              LEFT JOIN spotify_album_images sai on st.spotify_album_id = sai.spotify_album_id
+              LEFT JOIN spotify_artist_albums saa on sa.id = saa.spotify_album_id
+              LEFT JOIN spotify_artists s on saa.spotify_artist_id = s.id
+            WHERE saa.position = 0 AND sai.height = 64
+            GROUP BY sa.id, sai.url, s.name, s.id
+            ORDER BY total_playtime_ms DESC
+            LIMIT :limit OFFSET :offset
+          `,
+      {
+        limit: size,
+        offset: (page - 1) * size,
+      }
+    ),
+  ]);
 
-  if (query.data) {
-    const total = query.data.total;
-    const totalPages = Math.ceil(total / size);
-    const start = (page - 1) * size + 1;
-    const end = Math.min(start + size - 1, total);
+  const nextHref = `/albums/top?page=${page + 1}`;
+  const prevHref = `/albums/top?page=${page > 1 ? page - 1 : 1}`;
+  const total = albumCount.count;
+  const totalPages = Math.ceil(total / size);
+  const start = (page - 1) * size + 1;
+  const end = Math.min(start + size - 1, total);
 
-    return (
+  return (
+    <>
+      <Head>
+        <title>Playlist | Top Albums</title>
+        <meta
+          name="description"
+          content="My top albums on Spotify based on playtime."
+        />
+      </Head>
+
       <div>
         <table className="min-w-full divide-y divide-gray-300">
           <thead className="bg-gray-50">
@@ -49,7 +88,7 @@ export function MostPlayedAlbums({
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 bg-white">
-            {query.data.items.map((album) => (
+            {albums.map((album) => (
               <tr key={album.id}>
                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                   <div className="flex items-center">
@@ -75,7 +114,7 @@ export function MostPlayedAlbums({
                   </div>
                 </td>
                 <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                  <Playtime durationMs={album.total_playtime_ms} />
+                  <Playtime durationMs={Number(album.total_playtime_ms)} />
                 </td>
               </tr>
             ))}
@@ -112,49 +151,6 @@ export function MostPlayedAlbums({
           </div>
         </nav>
       </div>
-    );
-  }
-
-  return (
-    <div>
-      <table className="min-w-full divide-y divide-gray-300">
-        <thead className="bg-gray-50">
-          <tr>
-            <th
-              scope="col"
-              className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-            >
-              Album
-            </th>
-            <th
-              scope="col"
-              className="w-60 px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-            >
-              Playtime
-            </th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-200 bg-white">
-          {Array.from({ length: 10 }, (_, i) => (
-            <tr className="animate-pulse" key={i}>
-              <td className="py-4 pl-4 pr-3 sm:pl-6">
-                <div className="flex items-center">
-                  <div className="h-10 w-10 flex-shrink-0">
-                    <div className="h-10 w-10 rounded-full bg-gray-200"></div>
-                  </div>
-                  <div className="ml-4 space-y-1">
-                    <div className="h-3 w-80 rounded bg-gray-200" />
-                    <div className="h-3 w-60 rounded bg-gray-200" />
-                  </div>
-                </div>
-              </td>
-              <td className="px-3 py-4">
-                <div className="h-3 w-20 rounded bg-gray-200" />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    </>
   );
 }
