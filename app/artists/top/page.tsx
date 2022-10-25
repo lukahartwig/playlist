@@ -3,10 +3,16 @@ import Link from "next/link";
 import { queryOne, queryRows } from "@/lib/db";
 import { Playtime } from "@/components/Playtime";
 
+type PageParams = Record<string, string>;
+interface PageProps {
+  params?: PageParams;
+  searchParams?: Record<string, string | string[]>;
+}
+
 const size = 10;
 
-export default async function TopArtistsPage({ searchParams }) {
-  const page = searchParams?.page ? parseInt(searchParams.page) : 1;
+export default async function TopArtistsPage({ searchParams }: PageProps) {
+  const page = searchParams?.page ? parseInt(searchParams.page as string) : 1;
 
   const [artistCount, artists] = await Promise.all([
     queryOne<{ count: number }>(

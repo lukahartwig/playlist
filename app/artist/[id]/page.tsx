@@ -3,7 +3,13 @@ import Link from "next/link";
 import { queryRows } from "@/lib/db";
 import { Playtime } from "@/components/Playtime";
 
-export default async function ArtistDetailPage({ params: { id } }) {
+type PageParams = Record<string, string>;
+interface PageProps {
+  params?: PageParams;
+  searchParams?: Record<string, string | string[]>;
+}
+
+export default async function ArtistDetailPage({ params }: PageProps) {
   const albums = await queryRows<{
     id: string;
     title: string;
@@ -32,7 +38,7 @@ export default async function ArtistDetailPage({ params: { id } }) {
       GROUP BY sa.id, sai.url, s.name, s.id
       ORDER BY total_playtime_ms DESC
       `,
-    [id]
+    [params?.id]
   );
 
   return (
