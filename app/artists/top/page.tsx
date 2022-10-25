@@ -1,4 +1,3 @@
-import Head from "next/head";
 import Link from "next/link";
 import { queryOne, queryRows } from "@/lib/db";
 import { Playtime } from "@/components/Playtime";
@@ -48,76 +47,67 @@ export default async function TopArtistsPage({ searchParams }: PageProps) {
   const end = Math.min(start + size - 1, total);
 
   return (
-    <>
-      <Head>
-        <title>Playlist | Top Artists</title>
-        <meta
-          name="description"
-          content="My top artists on Spotify based on playtime."
-        />
-      </Head>
-      <div>
-        <table className="min-w-full divide-y divide-gray-300">
-          <thead className="bg-gray-50">
-            <tr>
-              <th
-                scope="col"
-                className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-              >
-                Artist
-              </th>
-              <th
-                scope="col"
-                className="w-60 px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-              >
-                Playtime
-              </th>
+    <div>
+      <table className="min-w-full divide-y divide-gray-300">
+        <thead className="bg-gray-50">
+          <tr>
+            <th
+              scope="col"
+              className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+            >
+              Artist
+            </th>
+            <th
+              scope="col"
+              className="w-60 px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+            >
+              Playtime
+            </th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-200 bg-white">
+          {artists.map((artist) => (
+            <tr key={artist.id}>
+              <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                <Link href={`/artist/${artist.id}`}>{artist.name}</Link>
+              </td>
+              <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                <Playtime durationMs={Number(artist.total_playtime_ms)} />
+              </td>
             </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200 bg-white">
-            {artists.map((artist) => (
-              <tr key={artist.id}>
-                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                  <Link href={`/artist/${artist.id}`}>{artist.name}</Link>
-                </td>
-                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                  <Playtime durationMs={Number(artist.total_playtime_ms)} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <nav
-          className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6"
-          aria-label="Pagination"
-        >
-          <div className="hidden sm:block">
-            <p className="text-sm text-gray-700">
-              Showing <span className="font-medium">{start}</span> to{" "}
-              <span className="font-medium">{end}</span> of{" "}
-              <span className="font-medium">{total}</span> results
-            </p>
-          </div>
-          <div className="flex flex-1 justify-between sm:justify-end">
-            {page !== 1 && (
-              <Link
-                className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-                href={prevHref}
-              >
-                Previous
-              </Link>
-            )}
-            {page !== totalPages && (
-              <Link
-                className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-                href={nextHref}
-              >
-                Next
-              </Link>
-            )}
-          </div>
-        </nav>
-      </div>
-    </>
+          ))}
+        </tbody>
+      </table>
+      <nav
+        className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6"
+        aria-label="Pagination"
+      >
+        <div className="hidden sm:block">
+          <p className="text-sm text-gray-700">
+            Showing <span className="font-medium">{start}</span> to{" "}
+            <span className="font-medium">{end}</span> of{" "}
+            <span className="font-medium">{total}</span> results
+          </p>
+        </div>
+        <div className="flex flex-1 justify-between sm:justify-end">
+          {page !== 1 && (
+            <Link
+              className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+              href={prevHref}
+            >
+              Previous
+            </Link>
+          )}
+          {page !== totalPages && (
+            <Link
+              className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+              href={nextHref}
+            >
+              Next
+            </Link>
+          )}
+        </div>
+      </nav>
+    </div>
   );
 }
