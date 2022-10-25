@@ -3,11 +3,7 @@ import Link from "next/link";
 import { queryRows } from "@/lib/db";
 import { Playtime } from "@/components/Playtime";
 
-export default async function ArtistDetailPage({
-  params: { id },
-}: {
-  params: { id: string };
-}) {
+export default async function ArtistDetailPage({ params: { id } }) {
   const albums = await queryRows<{
     id: string;
     title: string;

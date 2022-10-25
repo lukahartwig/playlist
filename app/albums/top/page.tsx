@@ -6,11 +6,7 @@ import { Playtime } from "@/components/Playtime";
 
 const size = 10;
 
-export default async function TopArtistsPage({
-  searchParams,
-}: {
-  searchParams: any;
-}) {
+export default async function TopArtistsPage({ searchParams }) {
   const page = searchParams?.page ? parseInt(searchParams.page) : 1;
   const [albumCount, albums] = await Promise.all([
     queryOne<{ count: number }>(`SELECT count(*) AS count FROM spotify_albums`),
