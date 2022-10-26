@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { queryOne, queryRows } from "@/lib/db";
-import { Playtime } from "@/components/Playtime";
+import { queryArtistsByPlaytime, queryCountArtists } from "@/lib/db";
+import { formatPlaytime } from "@/lib/format";
 
 type PageParams = Record<string, string>;
 interface PageProps {
@@ -14,29 +14,8 @@ export default async function TopArtistsPage({ searchParams }: PageProps) {
   const page = searchParams?.page ? parseInt(searchParams.page as string) : 1;
 
   const [artistCount, artists] = await Promise.all([
-    queryOne<{ count: number }>(
-      `SELECT count(*) AS count FROM spotify_artists`
-    ),
-    queryRows<{
-      id: string;
-      name: string;
-      total_playtime_ms: string;
-    }>(
-      `
-            SELECT sa.id, sa.name, sum(st.duration_ms) AS total_playtime_ms
-            FROM spotify_artists sa
-              LEFT JOIN spotify_artist_tracks sat on sa.id = sat.spotify_artist_id
-              LEFT JOIN spotify_played_tracks spt on sat.spotify_track_id = spt.spotify_track_id
-              LEFT JOIN spotify_tracks st on spt.spotify_track_id = st.id
-            GROUP BY sa.id
-            ORDER BY total_playtime_ms DESC
-            LIMIT :limit OFFSET :offset
-          `,
-      {
-        limit: size,
-        offset: (page - 1) * size,
-      }
-    ),
+    queryCountArtists(),
+    queryArtistsByPlaytime(page, size),
   ]);
 
   const nextHref = `/artists/top?page=${page + 1}`;
@@ -72,7 +51,7 @@ export default async function TopArtistsPage({ searchParams }: PageProps) {
                 <Link href={`/artist/${artist.id}`}>{artist.name}</Link>
               </td>
               <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                <Playtime durationMs={Number(artist.total_playtime_ms)} />
+                {formatPlaytime(Number(artist.total_playtime_ms))}
               </td>
             </tr>
           ))}

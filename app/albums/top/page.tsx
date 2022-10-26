@@ -1,56 +1,17 @@
 import Image from "next/image";
 import Link from "next/link";
-import { queryOne, queryRows } from "@/lib/db";
-import { Playtime } from "@/components/Playtime";
-
-type PageParams = Record<string, string>;
-interface PageProps {
-  params?: PageParams;
-  searchParams?: Record<string, string | string[]>;
-}
+import { queryCountAlbums, queryAlbumsByPlaytime } from "@/lib/db";
+import { formatPlaytime } from "@/lib/format";
+import { PageProps } from "@/types/next";
 
 const size = 10;
 
-export default async function TopArtistsPage({ searchParams }: PageProps) {
+export default async function TopAlbumsPage({ searchParams }: PageProps) {
   const page = searchParams?.page ? parseInt(searchParams.page as string) : 1;
+
   const [albumCount, albums] = await Promise.all([
-    queryOne<{ count: number }>(`SELECT count(*) AS count FROM spotify_albums`),
-    queryRows<{
-      id: string;
-      title: string;
-      artist: string;
-      artist_id: string;
-      album_cover_url: string;
-      album_cover_height: number;
-      album_cover_width: number;
-      total_playtime_ms: string;
-    }>(
-      `
-            SELECT
-              sa.id               AS id,
-              sa.name             AS title,
-              s.name              AS artist,
-              s.id                AS artist_id,
-              sai.url             AS album_cover_url,
-              sai.height          AS album_cover_height,
-              sai.width           AS album_cover_width,
-              sum(st.duration_ms) AS total_playtime_ms
-            FROM spotify_albums sa
-              LEFT JOIN spotify_tracks st on sa.id = st.spotify_album_id
-              LEFT JOIN spotify_played_tracks spt on st.id = spt.spotify_track_id
-              LEFT JOIN spotify_album_images sai on st.spotify_album_id = sai.spotify_album_id
-              LEFT JOIN spotify_artist_albums saa on sa.id = saa.spotify_album_id
-              LEFT JOIN spotify_artists s on saa.spotify_artist_id = s.id
-            WHERE saa.position = 0 AND sai.height = 64
-            GROUP BY sa.id, sai.url, s.name, s.id
-            ORDER BY total_playtime_ms DESC
-            LIMIT :limit OFFSET :offset
-          `,
-      {
-        limit: size,
-        offset: (page - 1) * size,
-      }
-    ),
+    queryCountAlbums(),
+    queryAlbumsByPlaytime(page, size),
   ]);
 
   const nextHref = `/albums/top?page=${page + 1}`;
@@ -106,7 +67,7 @@ export default async function TopArtistsPage({ searchParams }: PageProps) {
                 </div>
               </td>
               <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                <Playtime durationMs={Number(album.total_playtime_ms)} />
+                {formatPlaytime(Number(album.total_playtime_ms))}
               </td>
             </tr>
           ))}

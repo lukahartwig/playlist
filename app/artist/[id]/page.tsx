@@ -1,45 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import { queryRows } from "@/lib/db";
-import { Playtime } from "@/components/Playtime";
-
-type PageParams = Record<string, string>;
-interface PageProps {
-  params?: PageParams;
-  searchParams?: Record<string, string | string[]>;
-}
+import { queryAlbumsByArtistId } from "@/lib/db";
+import { formatPlaytime } from "@/lib/format";
+import { PageProps } from "@/types/next";
 
 export default async function ArtistDetailPage({ params }: PageProps) {
-  const albums = await queryRows<{
-    id: string;
-    title: string;
-    type: string;
-    album_cover_url: string;
-    album_cover_height: number;
-    album_cover_width: number;
-    total_playtime_ms: string;
-  }>(
-    `
-      SELECT
-        sa.id               AS id,
-        sa.name             AS title,
-        sa.type             AS type,
-        sai.url             AS album_cover_url,
-        sai.height          AS album_cover_height,
-        sai.width           AS album_cover_width,
-        sum(st.duration_ms) AS total_playtime_ms
-      FROM spotify_albums sa
-        LEFT JOIN spotify_tracks st on sa.id = st.spotify_album_id
-        LEFT JOIN spotify_played_tracks spt on st.id = spt.spotify_track_id
-        LEFT JOIN spotify_album_images sai on st.spotify_album_id = sai.spotify_album_id
-        LEFT JOIN spotify_artist_albums saa on sa.id = saa.spotify_album_id
-        LEFT JOIN spotify_artists s on saa.spotify_artist_id = s.id
-      WHERE s.id = ? AND sai.height = 300
-      GROUP BY sa.id, sai.url, s.name, s.id
-      ORDER BY total_playtime_ms DESC
-      `,
-    [params?.id]
-  );
+  const albums = await queryAlbumsByArtistId(params?.id as string);
 
   return (
     <div className="mx-auto max-w-7xl overflow-hidden py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
@@ -61,7 +27,7 @@ export default async function ArtistDetailPage({ params }: PageProps) {
             <h3 className="mt-4 font-medium text-gray-900">{album.title}</h3>
             <p className="italic text-gray-500">{album.type}</p>
             <p className="mt-2 font-medium text-gray-900">
-              <Playtime durationMs={Number(album.total_playtime_ms)} />
+              {formatPlaytime(Number(album.total_playtime_ms))}
             </p>
           </Link>
         ))}

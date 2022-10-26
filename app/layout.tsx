@@ -4,7 +4,10 @@ import { ReactNode } from "react";
 import { Inter } from "@next/font/google";
 import { NavHeader } from "./NavHeader";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--inter-font",
+});
 
 interface Props {
   children: ReactNode;
@@ -12,7 +15,7 @@ interface Props {
 
 export default function Layout({ children }: Props) {
   return (
-    <html lang="en" className={`h-full ${inter.className}`}>
+    <html lang="en" className={`h-full ${inter.variable}`}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta charSet="utf-8" />
