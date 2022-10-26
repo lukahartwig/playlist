@@ -43,9 +43,57 @@ export async function queryMostRecentlyPlayedTracks() {
   `);
 }
 
+export async function queryTracksByAlbumId(albumId: string) {
+  return queryRows<{
+    id: string;
+    title: string;
+    total_playtime_ms: string;
+    explicit: boolean;
+  }>(
+    `
+    SELECT
+      st.id,
+      st.name          AS title,
+      sum(duration_ms) AS total_playtime_ms,
+      explicit
+    FROM spotify_tracks st
+      LEFT JOIN spotify_played_tracks spt on st.id = spt.spotify_track_id
+    WHERE st.spotify_album_id = ?
+    GROUP BY st.id
+    ORDER BY total_playtime_ms DESC
+  `,
+    [albumId]
+  );
+}
+
 export async function queryCountArtists() {
   return queryOne<{ count: number }>(
     `SELECT count(*) AS count FROM spotify_artists`
+  );
+}
+
+export async function queryAlbumDetails(id: string) {
+  return queryOne<{
+    title: string;
+    release_date: string;
+    release_date_precision: string;
+    album_cover_url: string;
+    album_cover_height: number;
+    album_cover_width: number;
+  }>(
+    `
+    SELECT
+      name       AS title,
+      release_date,
+      release_date_precision,
+      sai.url    AS album_cover_url,
+      sai.height AS album_cover_heigt,
+      sai.width  AS album_cover_width
+    FROM spotify_albums sa
+      LEFT JOIN spotify_album_images sai on sa.id = sai.spotify_album_id
+    WHERE sai.height = 300 AND sa.id = ?
+    `,
+    [id]
   );
 }
 
