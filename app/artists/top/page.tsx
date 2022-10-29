@@ -8,7 +8,7 @@ interface PageProps {
   searchParams?: Record<string, string | string[]>;
 }
 
-const size = 10;
+const size = 50;
 
 export default async function TopArtistsPage({ searchParams }: PageProps) {
   const page = searchParams?.page ? parseInt(searchParams.page as string) : 1;
@@ -32,7 +32,13 @@ export default async function TopArtistsPage({ searchParams }: PageProps) {
           <tr>
             <th
               scope="col"
-              className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+              className="py-3.5 pl-4 pr-3 text-center text-sm font-semibold text-gray-900 sm:pl-6"
+            >
+              #
+            </th>
+            <th
+              scope="col"
+              className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900"
             >
               Artist
             </th>
@@ -45,9 +51,12 @@ export default async function TopArtistsPage({ searchParams }: PageProps) {
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200 bg-white">
-          {artists.map((artist) => (
+          {artists.map((artist, i) => (
             <tr key={artist.id}>
-              <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+              <td className="whitespace-nowrap py-4 pl-4 pr-3 text-center text-sm text-gray-500 sm:pl-6">
+                {start + i}
+              </td>
+              <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900">
                 <Link href={`/artist/${artist.id}`}>{artist.name}</Link>
               </td>
               <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">

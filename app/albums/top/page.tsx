@@ -4,7 +4,7 @@ import { queryCountAlbums, queryAlbumsByPlaytime } from "@/lib/db";
 import { formatPlaytime } from "@/lib/format";
 import { PageProps } from "@/types/next";
 
-const size = 10;
+const size = 50;
 
 export default async function TopAlbumsPage({ searchParams }: PageProps) {
   const page = searchParams?.page ? parseInt(searchParams.page as string) : 1;
@@ -28,7 +28,13 @@ export default async function TopAlbumsPage({ searchParams }: PageProps) {
           <tr>
             <th
               scope="col"
-              className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+              className="py-3.5 pl-4 pr-3 text-center text-sm font-semibold text-gray-900 sm:pl-6"
+            >
+              #
+            </th>
+            <th
+              scope="col"
+              className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900"
             >
               Album
             </th>
@@ -41,9 +47,12 @@ export default async function TopAlbumsPage({ searchParams }: PageProps) {
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200 bg-white">
-          {albums.map((album) => (
+          {albums.map((album, i) => (
             <tr key={album.id}>
-              <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
+              <td className="whitespace-nowrap py-4 pl-4 pr-3 text-center text-sm text-gray-500">
+                {start + i}
+              </td>
+              <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm">
                 <div className="flex items-center">
                   <div className="h-10 w-10 flex-shrink-0">
                     <Image
