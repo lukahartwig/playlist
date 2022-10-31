@@ -19,7 +19,7 @@
     "@upstash/qstash": "^0.1.7",
     "date-fns": "^2.29.3",
     "envalid": "^7.3.1",
-    "next": "^13.0.0",
+    "next": "13.0.1-canary.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "spotify-web-api-node": "^5.0.2",
