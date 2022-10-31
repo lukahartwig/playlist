@@ -11,6 +11,7 @@ const nextConfig = {
   images: {
     domains: ["i.scdn.co"],
   },
+  swcMinify: true,
 };
 
 module.exports = nextConfig;
