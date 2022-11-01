@@ -1,5 +1,5 @@
 {
-  "packageManager": "pnpm@7.14.0",
+  "packageManager": "pnpm@7.14.1",
   "scripts": {
     "build": "next build",
     "dev": "next dev",
@@ -8,18 +8,18 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.0.12",
-    "@next/font": "^13.0.0",
+    "@next/font": "^13.0.1",
     "@planetscale/database": "^1.4.0",
     "@prisma/client": "^4.5.0",
-    "@tanstack/react-query": "^4.12.0",
+    "@tanstack/react-query": "^4.14.1",
     "@trpc/client": "10.0.0-proxy-beta.25",
     "@trpc/next": "10.0.0-proxy-beta.25",
     "@trpc/react-query": "10.0.0-proxy-beta.25",
     "@trpc/server": "10.0.0-proxy-beta.25",
-    "@upstash/qstash": "^0.1.7",
+    "@upstash/qstash": "^0.1.8",
     "date-fns": "^2.29.3",
     "envalid": "^7.3.1",
-    "next": "13.0.1-canary.2",
+    "next": "13.0.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "spotify-web-api-node": "^5.0.2",
@@ -27,10 +27,10 @@
     "zod": "^3.19.1"
   },
   "devDependencies": {
-    "@types/node": "^18.11.0",
-    "@types/react": "^18.0.21",
+    "@types/node": "^18.11.9",
+    "@types/react": "^18.0.24",
     "@types/spotify-web-api-node": "^5.0.7",
-    "autoprefixer": "^10.4.12",
+    "autoprefixer": "^10.4.13",
     "eslint": "8.25.0",
     "eslint-config-next": "13.0.0",
     "eslint-config-prettier": "^8.5.0",
@@ -38,7 +38,7 @@
     "prettier": "^2.7.1",
     "prettier-plugin-tailwindcss": "^0.1.13",
     "prisma": "^4.5.0",
-    "tailwindcss": "^3.1.8",
+    "tailwindcss": "^3.2.1",
     "typescript": "^4.8.4"
   }
 }
