@@ -1,17 +1,17 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@heroicons/react': ^2.0.12
-  '@next/font': ^13.0.1
+  '@heroicons/react': ^2.0.13
+  '@next/font': ^13.0.2
   '@planetscale/database': ^1.4.0
   '@prisma/client': ^4.5.0
-  '@tanstack/react-query': ^4.14.1
+  '@tanstack/react-query': ^4.14.3
   '@trpc/client': 10.0.0-proxy-beta.25
   '@trpc/next': 10.0.0-proxy-beta.25
   '@trpc/react-query': 10.0.0-proxy-beta.25
   '@trpc/server': 10.0.0-proxy-beta.25
   '@types/node': ^18.11.9
-  '@types/react': ^18.0.24
+  '@types/react': ^18.0.25
   '@types/spotify-web-api-node': ^5.0.7
   '@upstash/qstash': ^0.1.8
   autoprefixer: ^10.4.13
@@ -34,14 +34,14 @@ specifiers:
   zod: ^3.19.1
 
 dependencies:
-  '@heroicons/react': 2.0.12_react@18.2.0
-  '@next/font': 13.0.1
+  '@heroicons/react': 2.0.13_react@18.2.0
+  '@next/font': 13.0.2
   '@planetscale/database': 1.4.0
   '@prisma/client': 4.5.0_prisma@4.5.0
-  '@tanstack/react-query': 4.14.1_biqbaboplfbrettd7655fr4n2y
+  '@tanstack/react-query': 4.14.3_biqbaboplfbrettd7655fr4n2y
   '@trpc/client': 10.0.0-proxy-beta.25_ndhcfffzalmz7qevgejzwgh3fi
-  '@trpc/next': 10.0.0-proxy-beta.25_65ucynbcjhye2g7632xnh6qxhq
-  '@trpc/react-query': 10.0.0-proxy-beta.25_tqp5v2v5txaphxyhmsfnoh3c7y
+  '@trpc/next': 10.0.0-proxy-beta.25_enehsoipmypmprtcjrtu4ivy6i
+  '@trpc/react-query': 10.0.0-proxy-beta.25_7ddahr43dz4ezs3rqpeqndbffe
   '@trpc/server': 10.0.0-proxy-beta.25
   '@upstash/qstash': 0.1.8
   date-fns: 2.29.3
@@ -55,7 +55,7 @@ dependencies:
 
 devDependencies:
   '@types/node': 18.11.9
-  '@types/react': 18.0.24
+  '@types/react': 18.0.25
   '@types/spotify-web-api-node': 5.0.7
   autoprefixer: 10.4.13_postcss@8.4.18
   eslint: 8.25.0
@@ -106,8 +106,8 @@ packages:
       - supports-color
     dev: true
 
-  /@heroicons/react/2.0.12_react@18.2.0:
-    resolution: {integrity: sha512-FZxKh3i9aKIDxyALTgIpSF2t6V6/eZfF5mRu41QlwkX3Oxzecdm1u6dpft6PQGxIBwO7TKYWaMAYYL8mp/EaOg==}
+  /@heroicons/react/2.0.13_react@18.2.0:
+    resolution: {integrity: sha512-iSN5XwmagrnirWlYEWNPdCDj9aRYVD/lnK3JlsC9/+fqGF80k8C7rl+1HCvBX0dBoagKqOFBs6fMhJJ1hOg1EQ==}
     peerDependencies:
       react: '>= 16'
     dependencies:
@@ -144,8 +144,8 @@ packages:
       glob: 7.1.7
     dev: true
 
-  /@next/font/13.0.1:
-    resolution: {integrity: sha512-ktst4FFbEPtD8SJVQr2HuAqOoFpJx3xKkLOHzCV7D5PUk6KL/sFQa+t6UEucN70X037tqBV39BsFhMJ56hsPOw==}
+  /@next/font/13.0.2:
+    resolution: {integrity: sha512-tLbyZCA1uF8HjbUEN5c4zB453yEzt5aT9VDhXPw1/eJhX4U0Q4lD3s3Bs+gpCjuLrEgILd56jQuzxgrMnWHH8A==}
     dev: false
 
   /@next/swc-android-arm-eabi/13.0.1:
@@ -323,12 +323,12 @@ packages:
       tslib: 2.4.0
     dev: false
 
-  /@tanstack/query-core/4.14.1:
-    resolution: {integrity: sha512-mUejKoFDe4NZB8jQJR1uuAl6IwvkUpOD2m8NcuTVPOu0pcxeeFPdrnHaljwOEFPtlqXoiiIIQGYy6whjCMN+iQ==}
+  /@tanstack/query-core/4.14.3:
+    resolution: {integrity: sha512-1OrxZk5jSKAjTIDgH/OHa6GfVpgGDVbCVf3KHQjXLFdutK4PSSXQIyX7I1HvBR3mYKyvFPo6yXKNG7QrkwUj9g==}
     dev: false
 
-  /@tanstack/react-query/4.14.1_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-cRgNzigw4GSPwGlTEkXi8hi/xgUnSEt9jCkiC8oAT3PEIdsQ50onZcpXd+JNJcZk2RTh8KM1fGyWz6xYLiY8bg==}
+  /@tanstack/react-query/4.14.3_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-PP7DEFsOMl/JaGQr1B4IeGN3lqHrC5EpG+AgG03OlVIOQMtXNhb0N66Nt1pdrladvzYsKD20L3O3550rBzgLtg==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
@@ -339,7 +339,7 @@ packages:
       react-native:
         optional: true
     dependencies:
-      '@tanstack/query-core': 4.14.1
+      '@tanstack/query-core': 4.14.3
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       use-sync-external-store: 1.2.0_react@18.2.0
@@ -353,7 +353,7 @@ packages:
       '@trpc/server': 10.0.0-proxy-beta.25
     dev: false
 
-  /@trpc/next/10.0.0-proxy-beta.25_65ucynbcjhye2g7632xnh6qxhq:
+  /@trpc/next/10.0.0-proxy-beta.25_enehsoipmypmprtcjrtu4ivy6i:
     resolution: {integrity: sha512-O/XJ2gGsGU1YIXZ/PsJ8yOnvs0Dy9IsORit6zd2x63fR6KGd+ML7QLoAyA3sD0kcC5rg8mCPN4u+VhczpY7kgQ==}
     peerDependencies:
       '@tanstack/react-query': ^4.3.8
@@ -364,9 +364,9 @@ packages:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
-      '@tanstack/react-query': 4.14.1_biqbaboplfbrettd7655fr4n2y
+      '@tanstack/react-query': 4.14.3_biqbaboplfbrettd7655fr4n2y
       '@trpc/client': 10.0.0-proxy-beta.25_ndhcfffzalmz7qevgejzwgh3fi
-      '@trpc/react-query': 10.0.0-proxy-beta.25_tqp5v2v5txaphxyhmsfnoh3c7y
+      '@trpc/react-query': 10.0.0-proxy-beta.25_7ddahr43dz4ezs3rqpeqndbffe
       '@trpc/server': 10.0.0-proxy-beta.25
       next: 13.0.1_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
@@ -374,7 +374,7 @@ packages:
       react-ssr-prepass: 1.5.0_react@18.2.0
     dev: false
 
-  /@trpc/react-query/10.0.0-proxy-beta.25_tqp5v2v5txaphxyhmsfnoh3c7y:
+  /@trpc/react-query/10.0.0-proxy-beta.25_7ddahr43dz4ezs3rqpeqndbffe:
     resolution: {integrity: sha512-a4tWnolVfrERoc2jZV35EQApuK6xXU7RbvJiaNpEKODOuhmpdspuyGJyqz7d+6OX1J3oZLO8arVv75FG8+xKRg==}
     peerDependencies:
       '@tanstack/react-query': ^4.3.8
@@ -383,7 +383,7 @@ packages:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
-      '@tanstack/react-query': 4.14.1_biqbaboplfbrettd7655fr4n2y
+      '@tanstack/react-query': 4.14.3_biqbaboplfbrettd7655fr4n2y
       '@trpc/client': 10.0.0-proxy-beta.25_ndhcfffzalmz7qevgejzwgh3fi
       '@trpc/server': 10.0.0-proxy-beta.25
       react: 18.2.0
@@ -406,8 +406,8 @@ packages:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
     dev: true
 
-  /@types/react/18.0.24:
-    resolution: {integrity: sha512-wRJWT6ouziGUy+9uX0aW4YOJxAY0bG6/AOk5AW5QSvZqI7dk6VBIbXvcVgIw/W5Jrl24f77df98GEKTJGOLx7Q==}
+  /@types/react/18.0.25:
+    resolution: {integrity: sha512-xD6c0KDT4m7n9uD4ZHi02lzskaiqcBxf4zi+tXZY98a04wvc0hi/TcCPC2FOESZi51Nd7tlUeOJY8RofL799/g==}
     dependencies:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.2
