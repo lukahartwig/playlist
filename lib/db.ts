@@ -2,6 +2,11 @@ import { Client } from "@planetscale/database";
 
 const client = new Client({
   url: process.env.DATABASE_URL,
+  fetch: (url, init) =>
+    fetch(url, {
+      cache: "no-store",
+      ...init,
+    }),
 });
 
 export async function queryMostRecentlyPlayedTracks() {
