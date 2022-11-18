@@ -8,13 +8,13 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.0.13",
-    "@next/font": "^13.0.3",
+    "@next/font": "^13.0.4",
     "@planetscale/database": "^1.4.0",
     "@prisma/client": "^4.6.1",
     "@upstash/qstash": "^0.1.8",
     "date-fns": "^2.29.3",
     "envalid": "^7.3.1",
-    "next": "^13.0.3",
+    "next": "^13.0.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "spotify-web-api-node": "^5.0.2"
