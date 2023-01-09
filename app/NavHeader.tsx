@@ -7,6 +7,7 @@ const navigation = [
   { name: "Dashboard", href: "/" },
   { name: "Artists", href: "/artists/top" },
   { name: "Albums", href: "/albums/top" },
+  { name: "Songs", href: "/songs/top" },
 ];
 
 function classNames(...classes: string[]) {

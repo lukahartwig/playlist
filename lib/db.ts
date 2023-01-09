@@ -4,7 +4,7 @@ const client = new Client({
   url: process.env.DATABASE_URL,
 });
 
-export async function queryMostRecentlyPlayedTracks() {
+export async function queryMostRecentlyPlayedTracks(limit = 10) {
   return queryRows<{
     id: string;
     title: string;
@@ -16,11 +16,12 @@ export async function queryMostRecentlyPlayedTracks() {
     album_cover_url: string;
     album_cover_height: number;
     album_cover_width: number;
-  }>(`
+  }>(
+    /*sql*/ `
     SELECT
       spt.id     AS id,
       st.name    AS title,
-      played_at,
+      played_at  AS played_at,
       sa.name    AS artist,
       sa.id      AS artist_id,
       s.name     AS album,
@@ -39,8 +40,10 @@ export async function queryMostRecentlyPlayedTracks() {
       AND a.position = 0
       AND sai.height = 64
     ORDER BY played_at DESC
-    LIMIT 10
-  `);
+    LIMIT ?
+  `,
+    [limit]
+  );
 }
 
 export async function queryTracksByAlbumId(albumId: string) {
@@ -50,7 +53,7 @@ export async function queryTracksByAlbumId(albumId: string) {
     total_playtime_ms: string;
     explicit: boolean;
   }>(
-    `
+    /*sql*/ `
     SELECT
       st.id,
       st.name          AS title,
@@ -68,7 +71,7 @@ export async function queryTracksByAlbumId(albumId: string) {
 
 export async function queryCountArtists() {
   return queryOne<{ count: number }>(
-    `SELECT count(*) AS count FROM spotify_artists`
+    /*sql*/ `SELECT count(*) AS count FROM spotify_artists`
   );
 }
 
@@ -81,7 +84,7 @@ export async function queryAlbumDetails(id: string) {
     album_cover_height: number;
     album_cover_width: number;
   }>(
-    `
+    /*sql*/ `
     SELECT
       name       AS title,
       release_date,
@@ -103,7 +106,7 @@ export async function queryArtistsByPlaytime(page = 1, pageSize = 10) {
     name: string;
     total_playtime_ms: string;
   }>(
-    `
+    /*sql*/ `
     SELECT sa.id, sa.name, sum(st.duration_ms) AS total_playtime_ms
     FROM spotify_artists sa
       LEFT JOIN spotify_artist_tracks sat on sa.id = sat.spotify_artist_id
@@ -122,7 +125,7 @@ export async function queryArtistsByPlaytime(page = 1, pageSize = 10) {
 
 export async function queryCountAlbums() {
   return queryOne<{ count: number }>(
-    `SELECT count(*) AS count FROM spotify_albums`
+    /*sql*/ `SELECT count(*) AS count FROM spotify_albums`
   );
 }
 
@@ -137,7 +140,7 @@ export async function queryAlbumsByPlaytime(page = 1, pageSize = 10) {
     album_cover_width: number;
     total_playtime_ms: string;
   }>(
-    `
+    /*sql*/ `
     SELECT
       sa.id               AS id,
       sa.name             AS title,
@@ -175,7 +178,7 @@ export async function queryAlbumsByArtistId(artistId: string) {
     album_cover_width: number;
     total_playtime_ms: string;
   }>(
-    `
+    /*sql*/ `
     SELECT
       sa.id               AS id,
       sa.name             AS title,
@@ -195,6 +198,55 @@ export async function queryAlbumsByArtistId(artistId: string) {
     ORDER BY total_playtime_ms DESC
     `,
     [artistId]
+  );
+}
+
+export async function queryTracksByPlaytime(page = 1, pageSize = 10) {
+  return queryRows<{
+    id: string;
+    title: string;
+    artist: string;
+    artist_id: string;
+    album_id: string;
+    album_title: string;
+    album_cover_url: string;
+    album_cover_height: number;
+    album_cover_width: number;
+    total_playtime_ms: string;
+  }>(
+    /*sql*/ `
+    SELECT
+      st.id               AS id,
+      st.name             AS title,
+      s.name              AS artist,
+      s.id                AS artist_id,
+      sa.id               AS album_id,
+      sa.name             AS album_title,
+      sai.url             AS album_cover_url,
+      sai.height          AS album_cover_height,
+      sai.width           AS album_cover_width,
+      sum(st.duration_ms) AS total_playtime_ms
+    FROM spotify_tracks st
+      LEFT JOIN spotify_albums sa on sa.id = st.spotify_album_id
+      LEFT JOIN spotify_played_tracks spt on st.id = spt.spotify_track_id
+      LEFT JOIN spotify_album_images sai on st.spotify_album_id = sai.spotify_album_id
+      LEFT JOIN spotify_artist_albums saa on sa.id = saa.spotify_album_id
+      LEFT JOIN spotify_artists s on saa.spotify_artist_id = s.id
+    WHERE saa.position = 0 AND sai.height = 64
+    GROUP BY st.id, sai.url, s.name, s.id
+    ORDER BY total_playtime_ms DESC
+    LIMIT :limit OFFSET :offset
+    `,
+    {
+      limit: pageSize,
+      offset: (page - 1) * pageSize,
+    }
+  );
+}
+
+export async function queryCountTracks() {
+  return queryOne<{ count: number }>(
+    /*sql*/ `SELECT count(*) AS count FROM spotify_tracks`
   );
 }
 
