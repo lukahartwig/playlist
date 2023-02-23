@@ -1,7 +1,7 @@
 import "tailwindcss/tailwind.css";
 
 import { ReactNode } from "react";
-import { Inter } from "@next/font/google";
+import { Inter } from "next/font/google";
 import { NavHeader } from "./NavHeader";
 
 const inter = Inter({
