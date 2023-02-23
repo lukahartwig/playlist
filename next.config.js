@@ -11,7 +11,6 @@ const nextConfig = {
   experimental: {
     appDir: true,
     runtime: "experimental-edge",
-    typedRoutes: true,
   },
   images: {
     domains: ["i.scdn.co"],
