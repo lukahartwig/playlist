@@ -2,6 +2,8 @@ import { queryAlbumDetails, queryTracksByAlbumId } from "@/lib/db";
 import { formatPlaytime } from "@/lib/format";
 import { PageProps } from "@/types/next";
 
+export const runtime = "edge";
+
 export default async function AlbumDetailPage({ params }: PageProps) {
   const albumId = params?.id as string;
 

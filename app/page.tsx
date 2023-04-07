@@ -3,6 +3,8 @@ import Link from "next/link";
 import { formatDistanceToNowStrict } from "date-fns";
 import { queryMostRecentlyPlayedTracks } from "@/lib/db";
 
+export const runtime = "edge";
+
 export default async function HomePage() {
   const tracks = await queryMostRecentlyPlayedTracks();
 

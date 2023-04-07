@@ -1,21 +1,20 @@
-// @ts-check
+import bundleAnalyzer from "@next/bundle-analyzer";
 
-const withBundleAnalyzer = require("@next/bundle-analyzer")({
+const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 });
 
 /**
  * @type {import('next').NextConfig}
- **/
+ */
 const nextConfig = {
   experimental: {
     appDir: true,
-    runtime: "experimental-edge",
   },
   images: {
     domains: ["i.scdn.co"],
   },
-  swcMinify: true,
+  swcMinify: false,
 };
 
-module.exports = withBundleAnalyzer(nextConfig);
+export default withBundleAnalyzer(nextConfig);

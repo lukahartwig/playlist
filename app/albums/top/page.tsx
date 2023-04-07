@@ -4,6 +4,8 @@ import { queryCountAlbums, queryAlbumsByPlaytime } from "@/lib/db";
 import { formatPlaytime } from "@/lib/format";
 import { PageProps } from "@/types/next";
 
+export const runtime = "edge";
+
 const size = 50;
 
 export default async function TopAlbumsPage({ searchParams }: PageProps) {

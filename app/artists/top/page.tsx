@@ -2,6 +2,8 @@ import Link from "next/link";
 import { queryArtistsByPlaytime, queryCountArtists } from "@/lib/db";
 import { formatPlaytime } from "@/lib/format";
 
+export const runtime = "edge";
+
 type PageParams = Record<string, string>;
 interface PageProps {
   params?: PageParams;
