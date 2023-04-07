@@ -1,78 +1,94 @@
-import { Client } from "@planetscale/database";
+import { connect, Client } from "@planetscale/database";
+import { sql } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm/expressions";
+import { AnyMySqlColumn } from "drizzle-orm/mysql-core";
+import { drizzle } from "drizzle-orm/planetscale-serverless";
+import {
+  spotifyAlbumImages,
+  spotifyAlbums,
+  spotifyArtistTracks,
+  spotifyArtists,
+  spotifyPlayedTracks,
+  spotifyTracks,
+} from "@/migrations/schema";
 
 const client = new Client({
   url: process.env.DATABASE_URL,
 });
 
+const connection = connect({
+  url: process.env.DATABASE_URL,
+});
+
+const db = drizzle(connection);
+
 export async function queryMostRecentlyPlayedTracks(limit = 10) {
-  return queryRows<{
-    id: string;
-    title: string;
-    played_at: string;
-    artist: string;
-    artist_id: string;
-    album: string;
-    album_id: string;
-    album_cover_url: string;
-    album_cover_height: number;
-    album_cover_width: number;
-  }>(
-    /*sql*/ `
-    SELECT
-      spt.id     AS id,
-      st.name    AS title,
-      played_at  AS played_at,
-      sa.name    AS artist,
-      sa.id      AS artist_id,
-      s.name     AS album,
-      s.id       AS album_id,
-      sai.url    AS album_cover_url,
-      sai.height AS album_cover_height,
-      sai.width  AS album_cover_width
-    FROM spotify_played_tracks spt
-      LEFT JOIN spotify_tracks st on st.id = spt.spotify_track_id
-      LEFT JOIN spotify_artist_tracks a on st.id = a.spotify_track_id
-      LEFT JOIN spotify_artists sa on a.spotify_artist_id = sa.id
-      LEFT JOIN spotify_albums s on st.spotify_album_id = s.id
-      LEFT JOIN spotify_album_images sai on st.spotify_album_id = sai.spotify_album_id
-    WHERE
-      DATE(played_at) > (NOW() - INTERVAL 7 DAY)
-      AND a.position = 0
-      AND sai.height = 64
-    ORDER BY played_at DESC
-    LIMIT ?
-  `,
-    [limit]
-  );
+  return db
+    .select({
+      id: spotifyPlayedTracks.id,
+      title: spotifyTracks.name,
+      played_at: spotifyPlayedTracks.playedAt,
+      artist: spotifyArtists.name,
+      artist_id: spotifyArtists.id,
+      album: spotifyAlbums.name,
+      album_id: spotifyAlbums.id,
+      album_cover_url: spotifyAlbumImages.url,
+      album_cover_height: spotifyAlbumImages.height,
+      album_cover_width: spotifyAlbumImages.width,
+    })
+    .from(spotifyPlayedTracks)
+    .leftJoin(
+      spotifyTracks,
+      eq(spotifyPlayedTracks.spotifyTrackId, spotifyTracks.id)
+    )
+    .leftJoin(
+      spotifyArtistTracks,
+      eq(spotifyArtistTracks.spotifyTrackId, spotifyTracks.id)
+    )
+    .leftJoin(
+      spotifyArtists,
+      eq(spotifyArtists.id, spotifyArtistTracks.spotifyArtistId)
+    )
+    .leftJoin(spotifyAlbums, eq(spotifyAlbums.id, spotifyTracks.spotifyAlbumId))
+    .leftJoin(
+      spotifyAlbumImages,
+      eq(spotifyAlbumImages.spotifyAlbumId, spotifyTracks.spotifyAlbumId)
+    )
+    .where(
+      and(
+        eq(spotifyArtistTracks.position, 0),
+        eq(spotifyAlbumImages.height, 64)
+      )
+    )
+    .orderBy(desc(spotifyPlayedTracks.playedAt))
+    .limit(limit);
 }
 
 export async function queryTracksByAlbumId(albumId: string) {
-  return queryRows<{
-    id: string;
-    title: string;
-    total_playtime_ms: string;
-    explicit: boolean;
-  }>(
-    /*sql*/ `
-    SELECT
-      st.id,
-      st.name          AS title,
-      sum(duration_ms) AS total_playtime_ms,
-      explicit
-    FROM spotify_tracks st
-      LEFT JOIN spotify_played_tracks spt on st.id = spt.spotify_track_id
-    WHERE st.spotify_album_id = ?
-    GROUP BY st.id
-    ORDER BY total_playtime_ms DESC
-  `,
-    [albumId]
-  );
+  return db
+    .select({
+      id: spotifyTracks.id,
+      title: spotifyTracks.name,
+      total_playtime_ms: sum(spotifyTracks.durationMs),
+      explicit: spotifyTracks.explicit,
+    })
+    .from(spotifyTracks)
+    .leftJoin(
+      spotifyPlayedTracks,
+      eq(spotifyTracks.id, spotifyPlayedTracks.spotifyTrackId)
+    )
+    .where(eq(spotifyTracks.spotifyAlbumId, albumId))
+    .groupBy(spotifyTracks.id)
+    .orderBy(desc(sql`total_playtime_ms`));
 }
 
 export async function queryCountArtists() {
-  return queryOne<{ count: number }>(
-    /*sql*/ `SELECT count(*) AS count FROM spotify_artists`
-  );
+  const rows = await db
+    .select({ count: count() })
+    .from(spotifyArtists)
+    .limit(1);
+
+  return rows[0];
 }
 
 export async function queryAlbumDetails(id: string) {
@@ -261,4 +277,12 @@ async function queryRows<Row>(
 async function queryOne<Row>(query: string, params?: any[]): Promise<Row> {
   const result = await client.execute(query, params, { as: "object" });
   return result.rows[0] as Row;
+}
+
+function count(column: AnyMySqlColumn | "*" = "*") {
+  return sql<number>`count(${column})`;
+}
+
+function sum(column: AnyMySqlColumn) {
+  return sql<number>`sum(${column})`;
 }
